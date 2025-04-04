@@ -3,9 +3,8 @@ import { auth, db } from '@/firebase/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { setUser, logoutUser } from '@/config/slices/userSlice';
 import { store } from '@/config/store';
-import { useRouter } from 'next/navigation';
 
-export const signInWithGoogle = async (dispatch, router, role) => {
+export const signInWithGoogle = async (dispatch, router) => {
   const provider = new GoogleAuthProvider();
 
   try {
@@ -18,53 +17,33 @@ export const signInWithGoogle = async (dispatch, router, role) => {
       const userData = userSnap.data();
       dispatch(setUser({ ...userData, isAuthenticated: true }));
 
-      if (userData.isOnboarded) {
+      if (userData.isOnboarded && userData.role) {
         router.push(`/dashboard/${userData.role}`);
       } else {
-        router.push(`/onBoarding/${userData.role || role}`);
+        // 🟡 If not onboarded, pull role from Redux
+        const state = store.getState();
+        const selectedRole = state.user.role;
+        router.push(`/onBoarding/${selectedRole}`);
       }
     } else {
+      const state = store.getState();
+      const selectedRole = state.user.role;
+
       const newUser = {
         uid: user.uid,
         name: user.displayName,
         email: user.email,
         photoURL: user.photoURL,
-        role: role, 
         isOnboarded: false,
+        isAuthenticated: true,
+        // ❌ No role stored yet
       };
 
       await setDoc(userRef, newUser);
       dispatch(setUser(newUser));
-      router.push(`/onBoarding/${role}`);
+      router.push(`/onBoarding/${selectedRole}`);
     }
   } catch (error) {
-    console.error('Error signing in:', error);
+    console.error('🔥 Error signing in with Google:', error);
   }
-};
-
-export const logout = async (dispatch) => {
-  try {
-    await signOut(auth);
-    dispatch(logoutUser());
-  } catch (error) {
-    console.error('Error logging out:', error);
-  }
-};
-
-export const monitorAuthState = () => {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const userRef = doc(db, 'users', user.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
-        store.dispatch(setUser({ ...userData, isAuthenticated: !!userData.role }));
-      } else {
-        store.dispatch(logoutUser());
-      }
-    } else {
-      store.dispatch(logoutUser());
-    }
-  });
 };
