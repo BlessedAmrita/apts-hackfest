@@ -8,6 +8,7 @@ const EventBanner = () => {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
           Event Management & Organizer Hub
           </h1>
+          
           <p className="text-xl text-gray-800 mb-8">
           Host amazing events and grow your organizer profile - helping you create memorable experiences for attendees.
           </p>
