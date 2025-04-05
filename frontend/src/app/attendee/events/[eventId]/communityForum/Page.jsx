@@ -4,7 +4,10 @@ import { useParams } from 'next/navigation';
 import CommunityForumMain from '@/components/attendee/communityForum/CommunityForumMain';
 
 const CommunityForumPage = () => {
-  const { eventId } = useParams();
+  const params = useParams();
+  const eventId = params?.eventId;
+  console.log("🔍 CommunityForumPage eventId:", eventId);
+
 
   return (
     <div>

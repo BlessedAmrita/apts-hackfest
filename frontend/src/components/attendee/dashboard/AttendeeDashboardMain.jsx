@@ -4,10 +4,20 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import EventHeader from './EventHeader';
 import DashboardCard from './DashboardCard';
+import { useSelector } from 'react-redux';
 
 const AttendeeDashboardMain = () => {
   const router = useRouter();
-  const eventId = 'abc123'; // Replace with dynamic ID if needed
+  const { uid, isAuthenticated,additionalData } = useSelector((state) => state.user);
+  if (!uid) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-event-light-yellow">
+        <p className="text-gray-600 text-lg">Loading your dashboard...</p>
+      </div>
+    );
+  }
+  const eventId = additionalData.eventId;
+  console.log("✅ Event ID from Redux:", eventId);
 
   const dashboardItems = [
     {

@@ -27,6 +27,7 @@ const RegistrationForm = ({ onSubmit }) => {
     location: "",
     eventcode: "",
     source: "",
+    role: "attendee",
   });
 
   const handleInputChange = (e) => {

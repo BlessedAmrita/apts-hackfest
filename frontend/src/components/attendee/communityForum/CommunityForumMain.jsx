@@ -23,21 +23,15 @@ const CommunityForumMain = ({ eventId }) => {
   const { user } = useAuth(); // 🔥 Get logged-in user
   
   console.log("🟢 eventId in CommunityForumMain:", eventId);
-  useEffect(() => {
-    if (!eventId || !user) {
-      console.warn("Missing eventId or user, skipping Firestore call");
-      return;
-    }
-  
-    // ✅ Safe to call Firestore now
-    fetchMessages();
-  }, [eventId, user]);
-  
+
+  // ✅ Firestore Real-Time Listener for Posts
   useEffect(() => {
     if (!eventId) return;
 
-    // 🔥 Firestore Real-Time Listener for Posts
-    const q = query(collection(db, `events/${eventId}/posts`), orderBy("timestamp", "desc"));
+    const q = query(
+      collection(db, `events/${eventId}/posts`),
+      orderBy("timestamp", "desc")
+    );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetchedPosts = snapshot.docs.map((doc) => ({
@@ -51,8 +45,6 @@ const CommunityForumMain = ({ eventId }) => {
   }, [eventId]);
 
   const handlePostSubmit = async (e) => {
-    console.log("eventId:", eventId);
-    console.log("user:", user);
     e.preventDefault();
     if (!newPost.trim() || !user) return;
 
@@ -91,7 +83,10 @@ const CommunityForumMain = ({ eventId }) => {
                     onChange={(e) => setNewPost(e.target.value)}
                   />
                   <div className="flex justify-end">
-                    <Button type="submit" className="bg-event-yellow hover:bg-yellow-500 text-black flex gap-2">
+                    <Button
+                      type="submit"
+                      className="bg-event-yellow hover:bg-yellow-500 text-black flex gap-2"
+                    >
                       Post <Send className="h-4 w-4" />
                     </Button>
                   </div>

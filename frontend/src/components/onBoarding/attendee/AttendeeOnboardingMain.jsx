@@ -1,8 +1,11 @@
-
 'use client';
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+
+import { useAuth } from "@/context/AuthContext";
+import { submitOnboarding } from "../submitOnboarding"; 
 import EventBanner from "./EventBanner";
 import RegistrationForm from "./RegistrationForm";
 import { Toaster } from "@/components/ui/toaster";
@@ -10,31 +13,21 @@ import { Toaster } from "@/components/ui/toaster";
 const Index = () => {
   const [step, setStep] = useState("registration");
   const [userData, setUserData] = useState(null);
-  const router = useRouter(); // Initialize router
 
-  const handleRegistrationSubmit = async (data) => {
-    if (!user) return alert("You must be logged in");
-  
-    const eventId = data.eventcode; // 🔥 This is the event code they entered
-  
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { user } = useAuth();
+
+  const handleRegistrationSubmit = async (formData) => {
+    setUserData(formData);
+    setStep("feedback");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // ✅ Submit to Firestore and update Redux state
     try {
-      // 🔍 Check if the event with that code exists
-      const eventRef = doc(db, "events", eventId);
-      const eventSnap = await getDoc(eventRef);
-  
-      if (!eventSnap.exists()) {
-        alert("Invalid event code! Please check and try again."); // 🧁 Replace this with toast if you want
-        return;
-      }
-  
-      // ✅ Event exists, proceed with onboarding
-      await saveAttendeeOnboarding(user.uid, data);
-      setUserData(data);
-      setStep("feedback");
-      router.push("/attendee");
+      await submitOnboarding(formData, user, router, dispatch);
     } catch (error) {
-      console.error("Error verifying event code or saving data:", error);
-      alert("Something went wrong, please try again.");
+      console.error("Error during onboarding:", error);
     }
   };
 
@@ -48,11 +41,6 @@ const Index = () => {
   const handleReset = () => {
     setStep("registration");
     setUserData(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleBackToRegistration = () => {
-    setStep("registration");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
