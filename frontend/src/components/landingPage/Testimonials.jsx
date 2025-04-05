@@ -51,7 +51,7 @@ const TestimonialCard = ({ testimonial, index }) => {
 
 const TestimonialsSection = () => {
   return (
-    <section id="testimonials" className="py-16 md:py-20 px-6 md:px-8 lg:px-12 bg-gradient-to-b from-yellow-50 to-white">
+    <section id="testimonials" className="py-16 md:py-20 px-6 md:px-8 lg:px-12 bg-gradient-to-b from-orange-50 to-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <motion.h2 

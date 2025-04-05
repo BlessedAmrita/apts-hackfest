@@ -11,11 +11,10 @@ import Footer from '../marginals/Footer';
 
 const LandingPageMain = () => {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-yellow-50 to-white relative overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-b from-orange-50 to-white relative overflow-hidden">
       {/* Background decoration elements */}
-      <div className="absolute top-40 -left-40 w-80 h-80 bg-yellow-300 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
-      <div className="absolute top-[60%] -right-40 w-80 h-80 bg-blue-300 rounded-full filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
-      
+      <div className="absolute top-40 -left-40 w-80 h-80 bg-apts-darkorange rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+     
       <main className="overflow-hidden md:pl-0">
         <Hero />
         <Features />
