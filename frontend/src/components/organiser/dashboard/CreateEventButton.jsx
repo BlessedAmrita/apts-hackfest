@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
-
-
+import { serverTimestamp } from "firebase/firestore";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -69,7 +68,7 @@ const CreateEventButton = () => {
       await setDoc(doc(db, "events", eventId, "metadata", "info"), {
         ...formData,
         eventId,
-        createdAt: new Date()
+        createdAt: serverTimestamp()
       });
 
       await navigator.clipboard.writeText(eventId);
