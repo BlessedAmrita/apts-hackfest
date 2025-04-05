@@ -24,6 +24,9 @@ const RegistrationForm = ({ onSubmit }) => {
     gender: "",
     location: "",
     source: "",
+    phonenumber: "",
+    eventId: "", 
+    role: "attendee",
   });
 
   const handleInputChange = (e) => {
@@ -96,6 +99,7 @@ const RegistrationForm = ({ onSubmit }) => {
 
           <div className="space-y-2">
             <Label htmlFor="phonenumber">Phone Number</Label>
+
             <Input
               id="phonenumber"
               name="phonenumber"
@@ -110,12 +114,12 @@ const RegistrationForm = ({ onSubmit }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="eventcode">Event Code</Label>
+            <Label htmlFor="eventId">Event Code</Label>
             <Input
-              id="eventcode"
-              name="eventcode"
+              id="eventId"
+              name="eventId"
               placeholder="e.g. CF03EG"
-              value={formData.eventcode}
+              value={formData.eventId}
               onChange={handleInputChange}
               required
               className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"

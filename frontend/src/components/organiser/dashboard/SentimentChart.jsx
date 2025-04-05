@@ -3,20 +3,25 @@ import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-const data = [
-  { name: "Very Positive", value: 35, color: "#77DD77" },
-  { name: "Positive", value: 40, color: "#AEC6CF" },
-  { name: "Neutral", value: 15, color: "#CFCFC4" },
-  { name: "Negative", value: 7, color: "#FFB347" },
-  { name: "Very Negative", value: 3, color: "#FF6961" },
-];
+const COLORS = ["#77DD77", "#FF6961"]; // Green for positive, red for negative
 
-const SentimentChart = () => {
+const SentimentChart = ({ summary }) => {
+  if (!summary) return null;
+
+  const { positive_total, negative_total } = summary;
+
+  const total = positive_total + negative_total;
+  const data = [
+    { name: "Positive", value: positive_total, color: COLORS[0] },
+    { name: "Negative", value: negative_total, color: COLORS[1] },
+  ];
+
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium">Audience Sentiment</CardTitle>
-        <CardDescription>Real-time feedback analysis</CardDescription>
+        <CardTitle className="text-lg font-medium">Overall Audience Mood</CardTitle>
+        <CardDescription>Based on recent feedback</CardDescription>
+
       </CardHeader>
       <CardContent>
         <div className="h-80">
@@ -36,7 +41,9 @@ const SentimentChart = () => {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value) => [`${value}%`, "Sentiment"]} />
+
+              <Tooltip formatter={(value) => [`${value}`, "Responses"]} />
+
               <Legend />
             </PieChart>
           </ResponsiveContainer>
@@ -47,3 +54,4 @@ const SentimentChart = () => {
 };
 
 export default SentimentChart;
+

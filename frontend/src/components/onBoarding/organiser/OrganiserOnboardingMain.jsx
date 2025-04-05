@@ -57,6 +57,10 @@
 
 'use client';
 
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import EventBanner from "./EventBanner";
@@ -66,16 +70,43 @@ import { Toaster } from "@/components/ui/toaster";
 const Index = () => {
   const [step, setStep] = useState("registration");
   const [userData, setUserData] = useState(null);
-  const router = useRouter(); // Initialize router
 
-  const handleRegistrationSubmit = (data) => {
-    setUserData(data);
-    setStep("feedback");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const router = useRouter();
 
-    // Redirect to the attendee page
-    router.push("/organiser");
+  const handleRegistrationSubmit = async (data) => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+  
+      if (!user) {
+        console.error("No authenticated user");
+        return;
+      }
+  
+      const db = getFirestore();
+      const userRef = doc(db, "users", user.uid);
+  
+      await setDoc(userRef, {
+        ...data,
+        uid: user.uid,
+        email: user.email,
+        name: user.displayName,
+        photoURL: user.photoURL,
+        role: "organiser", 
+        timestamp: new Date(),
+      });
+  
+      // Optionally save to Redux here (next step)
+      setUserData(data);
+      setStep("feedback");
+  
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      router.push("/organiser");
+    } catch (error) {
+      console.error("Error saving registration to Firestore:", error);
+    }
   };
+  
 
   const handleFeedbackSubmit = (data) => {
     console.log("Registration data:", userData);

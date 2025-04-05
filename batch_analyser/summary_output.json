@@ -1,0 +1,27 @@
+{
+  "issues": {
+    "audio_issue": {
+      "count": 1,
+      "severity": 4,
+      "impact_score": 4
+    },
+    "long_wait_time": {
+      "count": 1,
+      "severity": 5,
+      "impact_score": 5
+    }
+  },
+  "positive_emotions": {
+    "satisfied": 1
+  },
+  "negative_emotions": {
+    "frustrated": 2,
+    "dissatisfied": 1,
+    "annoyed": 1
+  },
+  "emotion_summary": {
+    "positive_total": 1,
+    "negative_total": 4,
+    "overall_mood": "negative"
+  }
+}

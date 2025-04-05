@@ -4,10 +4,20 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import EventHeader from './EventHeader';
 import DashboardCard from './DashboardCard';
+import { useSelector } from 'react-redux';
 
 const AttendeeDashboardMain = () => {
   const router = useRouter();
-  const eventId = 'abc123'; // Replace with dynamic ID if needed
+  const { uid, isAuthenticated, additionalData } = useSelector((state) => state.user);
+  if (!uid) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-event-light-yellow">
+        <p className="text-gray-600 text-lg">Loading your dashboard...</p>
+      </div>
+    );
+  }
+  const eventId = additionalData.eventId;
+  console.log("✅ Event ID from Redux:", eventId);
 
   const dashboardItems = [
     {
@@ -109,14 +119,14 @@ const AttendeeDashboardMain = () => {
               completed={item.completed}
               onClick={
                 item.id === 'community-forum'
-                  ? () => router.push(`/attendee/communityForum/${eventId}`)
+                  ? () => router.push(`/attendee/events/${eventId}/communityForum`)
                   : undefined
               }
             />
           ))}
         </div>
         
-        <div className="mt-12 bg-white rounded-xl shadow-md p-6 max-w-3xl mx-auto">
+        {/* <div className="mt-12 bg-white rounded-xl shadow-md p-6 max-w-3xl mx-auto">
           <h3 className="text-xl font-semibold mb-4 text-gray-800">Event Information</h3>
           <div className="space-y-4">
             <p className="text-gray-700">
@@ -132,7 +142,7 @@ const AttendeeDashboardMain = () => {
               Please make sure to complete all required forms. Your input helps us create the best possible experience for everyone!
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
