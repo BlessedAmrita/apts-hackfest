@@ -18,7 +18,7 @@ export const signInWithGoogle = async (dispatch, router) => {
       dispatch(setUser({ ...userData, isAuthenticated: true }));
 
       if (userData.isOnboarded && userData.role) {
-        router.push(`/dashboard/${userData.role}`);
+        router.push(`/${userData.role}`);
       } else {
         // 🟡 If not onboarded, pull role from Redux
         const state = store.getState();

@@ -1,0 +1,5 @@
+spacy
+flashtext
+transformers
+torch
+lime

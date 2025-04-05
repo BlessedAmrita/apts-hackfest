@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 const AttendeeDashboardMain = () => {
   const router = useRouter();
-  const { uid, isAuthenticated,additionalData } = useSelector((state) => state.user);
+  const { uid, isAuthenticated, additionalData } = useSelector((state) => state.user);
   if (!uid) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-event-light-yellow">
@@ -126,7 +126,7 @@ const AttendeeDashboardMain = () => {
           ))}
         </div>
         
-        <div className="mt-12 bg-white rounded-xl shadow-md p-6 max-w-3xl mx-auto">
+        {/* <div className="mt-12 bg-white rounded-xl shadow-md p-6 max-w-3xl mx-auto">
           <h3 className="text-xl font-semibold mb-4 text-gray-800">Event Information</h3>
           <div className="space-y-4">
             <p className="text-gray-700">
@@ -142,7 +142,7 @@ const AttendeeDashboardMain = () => {
               Please make sure to complete all required forms. Your input helps us create the best possible experience for everyone!
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,8 +23,9 @@ const RegistrationForm = ({ onSubmit }) => {
     age: "",
     gender: "",
     location: "",
-    eventcode: "",
     source: "",
+    phonenumber: "",
+    eventId: "", 
     role: "attendee",
   });
 
@@ -99,12 +98,27 @@ const RegistrationForm = ({ onSubmit }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="eventcode">Event Code</Label>
+            <Label htmlFor="phonenumber">Phone Number</Label>
             <Input
-              id="eventcode"
-              name="eventcode"
+              id="phonenumber"
+              name="phonenumber"
+              type="number"
+              min="10"
+              placeholder="Your contact number"
+              value={formData.phonenumber}
+              onChange={handleInputChange}
+              required
+              className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="eventId">Event Code</Label>
+            <Input
+              id="eventId"
+              name="eventId"
               placeholder="e.g. CF03EG"
-              value={formData.eventcode}
+              value={formData.eventId}
               onChange={handleInputChange}
               required
               className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
@@ -144,7 +158,7 @@ const RegistrationForm = ({ onSubmit }) => {
               !formData.name ||
               !formData.age ||
               !formData.gender ||
-              !formData.eventcode ||
+              !formData.phonenumber ||
               !formData.location ||
               !formData.source
             }

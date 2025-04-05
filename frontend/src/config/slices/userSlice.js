@@ -55,6 +55,9 @@ const userSlice = createSlice({
     logoutUser: () => ({
       ...initialState, // reset everything
     }),
+    setEventId: (state, action) => {
+      state.additionalData.eventId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -75,5 +78,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, setRole, logoutUser } = userSlice.actions;
+export const { setUser, setRole, logoutUser,setEventId } = userSlice.actions;
 export default userSlice.reducer;

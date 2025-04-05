@@ -1,4 +1,3 @@
-
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -304,5 +303,58 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .dashboard-card {
+    @apply bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100 overflow-hidden;
+  }
+  
+  .stat-card {
+    @apply flex flex-col p-5 dashboard-card;
+  }
+  
+  .nav-link {
+    @apply flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent transition-colors duration-200;
+  }
+  
+  .nav-link.active {
+    @apply bg-sidebar-accent text-sidebar-accent-foreground font-medium;
+  }
+
+  .event-card {
+    @apply relative p-5 dashboard-card h-full;
+  }
+  
+  .alert-item {
+    @apply flex items-start gap-3 p-3 rounded-lg transition-colors duration-200;
+  }
+  .issue-card {
+    @apply rounded-xl border p-4 shadow-sm transition-all hover:shadow-md;
+  }
+  
+  .issue-card-low {
+    @apply bg-severity-low border-l-4 border-l-green-400;
+  }
+  
+  .issue-card-medium {
+    @apply bg-severity-medium border-l-4 border-l-yellow-400;
+  }
+  
+  .issue-card-high {
+    @apply bg-severity-high border-l-4 border-l-orange-400;
+  }
+   
+  .issue-card-critical {
+    @apply bg-severity-critical border-l-4 border-l-red-400;
+  }
+
+  .notification-badge {
+    @apply absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center text-xs text-white;
+  }
+
+  .dashboard-card {
+    @apply rounded-xl border p-5 bg-white shadow-sm hover:shadow-md transition-all;
   }
 }

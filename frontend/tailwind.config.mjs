@@ -69,7 +69,36 @@ const config = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+			  pastel: {
+				purple: "#E5DEFF",
+				blue: "#D3E4FD",
+				pink: "#FFDEE2",
+				green: "#F2FCE2",
+				yellow: "#FEF7CD",
+				peach: "#FDE1D3",
+				gray: "#F1F0FB",
+				red: '#FFD1D1',
+			},
+			orange:{
+				DEFAULT:"#FEC6A1",
+				100:'#ff952c',
+				200:'#ffa01f',
+				300:'#FF8C00',
+				400:'#FF7F00',
+				700:'#CC7000',
+				lightorange:'#ffc561',
+				50:'#ffebc6', 
+				80:'#ffbc47',
+			},
+
+			severity: {
+				low: '#F2FCE2',     // Light green
+				medium: '#FEF7CD',  // Light yellow
+				high: '#FEC6A1',    // Light orange
+				critical: '#FFD1D1', // Light red
+			} 
+
   		},
   		keyframes: {
   			'accordion-down': {

@@ -7,8 +7,6 @@ const CommunityForumPage = () => {
   const params = useParams();
   const eventId = params?.eventId;
   console.log("🔍 CommunityForumPage eventId:", eventId);
-
-
   return (
     <div>
       <CommunityForumMain eventId={eventId} />
