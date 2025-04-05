@@ -107,6 +107,7 @@ const Dashboard = () => {
             {/* Stats Overview with event count */}
             <EventStatCards eventCount={eventCount} />
 
+
             {/* Dropdown to select Event ID */}
             <div className="w-full max-w-sm">
               <label htmlFor="event-select" className="block mb-1 font-medium">
@@ -132,6 +133,7 @@ const Dashboard = () => {
             {/* Middle Section */}
             <div className="grid gap-6 md:grid-cols-2">
               <SentimentChart summary={summary} />
+
               <AlertsList />
             </div>
 

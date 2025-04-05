@@ -22,6 +22,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { toast } from "sonner";
+
 import { db } from "@/firebase/firebase"; // make sure this exports your firestore instance
 import { doc, setDoc } from "firebase/firestore";
 
@@ -94,13 +95,16 @@ const CreateEventButton = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+
       <DialogTrigger asChild>
         <Button className="gap-2">
           <PlusCircle size={18} />
           Create New Event
         </Button>
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-[500px] bg-white border border-yellow-400 shadow-md rounded-xl">
+
         <DialogHeader>
           <DialogTitle>Create New Event</DialogTitle>
           <DialogDescription>
@@ -111,20 +115,25 @@ const CreateEventButton = () => {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Event Name</Label>
+
               <Input id="name" value={formData.name} onChange={handleChange} placeholder="Summer Music Festival" required />
+
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="start-date">Start Date</Label>
+
                 <Input id="startDate" type="date" value={formData.startDate} onChange={handleChange} required />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="end-date">End Date</Label>
                 <Input id="endDate" type="date" value={formData.endDate} onChange={handleChange} required />
+
               </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="location">Location</Label>
+
               <Input id="location" value={formData.location} onChange={handleChange} placeholder="Central Park, New York" required />
             </div>
             <div className="grid gap-2">
@@ -134,6 +143,7 @@ const CreateEventButton = () => {
                   <SelectValue placeholder="Select event type" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border border-yellow-400 shadow-md rounded-xl">
+
                   <SelectItem value="festival">Festival</SelectItem>
                   <SelectItem value="conference">Conference</SelectItem>
                   <SelectItem value="concert">Concert</SelectItem>
@@ -144,6 +154,7 @@ const CreateEventButton = () => {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
+
               <Input id="description" value={formData.description} onChange={handleChange} placeholder="A brief description of your event" />
             </div>
           </div>
@@ -151,6 +162,7 @@ const CreateEventButton = () => {
             <Button type="submit" disabled={loading}>
               {loading ? "Creating..." : "Create Event"}
             </Button>
+
           </DialogFooter>
         </form>
       </DialogContent>

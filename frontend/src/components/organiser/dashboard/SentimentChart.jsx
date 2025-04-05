@@ -1,3 +1,4 @@
+
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +21,7 @@ const SentimentChart = ({ summary }) => {
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-medium">Overall Audience Mood</CardTitle>
         <CardDescription>Based on recent feedback</CardDescription>
+
       </CardHeader>
       <CardContent>
         <div className="h-80">
@@ -39,7 +41,9 @@ const SentimentChart = ({ summary }) => {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
+
               <Tooltip formatter={(value) => [`${value}`, "Responses"]} />
+
               <Legend />
             </PieChart>
           </ResponsiveContainer>
@@ -50,3 +54,4 @@ const SentimentChart = ({ summary }) => {
 };
 
 export default SentimentChart;
+
