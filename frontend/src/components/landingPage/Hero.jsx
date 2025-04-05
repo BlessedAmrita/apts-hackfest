@@ -34,6 +34,7 @@ const HeroSection = () => {
             AI-powered insights to track attendee feedback, detect issues instantly, and enhance event satisfaction.
           </p>
           <div className="flex flex-col md:flex-row gap-4">
+
             <Button variant="outline" className="bg-orange-200  hover:bg-transparent hover:text-black text-white border-yellow-400 font-bold px-2 sm:px-6 py-6 text-lg h-auto" onClick={() => {
               dispatch(setRole('organiser'));
               signInWithGoogle(dispatch, router);
@@ -44,6 +45,7 @@ const HeroSection = () => {
               dispatch(setRole('attendee'));
               signInWithGoogle(dispatch, router);
             }}>
+
               Join an Event – Share Your Experience
             </Button>
           </div>
