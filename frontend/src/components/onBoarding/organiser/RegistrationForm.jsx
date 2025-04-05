@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+
 import {
   Select,
   SelectContent,
@@ -20,11 +22,32 @@ import {
 const RegistrationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     name: "",
-    age: "",
-    gender: "",
-    location: "",
-    source: "",
+    organisationname:"",
+    phonenumber: "",
+    experience: "",
+    biography: "",
+    eventTypes: [],
+    eventname: "",
   });
+
+  const eventTypeOptions = [
+    "Conferences", 
+    "Workshops", 
+    "Corporate Events",
+    "Concerts",
+    "Exhibitions",
+    "Webinars",
+    "Social Gatherings"
+  ];
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,15 +62,15 @@ const RegistrationForm = ({ onSubmit }) => {
     e.preventDefault();
     onSubmit(formData);
   };
-
+  
   return (
     <Card className="w-full max-w-md mx-auto shadow-lg animate-fade-in bg-white border-event-light-yellow">
       <CardHeader className="bg-event-light-yellow rounded-t-lg">
         <CardTitle className="text-center text-2xl font-bold">
-          Register for Event
+          Register as an Organiser
         </CardTitle>
         <CardDescription className="text-center text-gray-600">
-          Join us for an amazing experience!
+        Start creating and managing your own events!
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">
@@ -66,32 +89,16 @@ const RegistrationForm = ({ onSubmit }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="age">Age</Label>
+            <Label htmlFor="organisationname">Company/Organisation Name</Label>
             <Input
-              id="age"
-              name="age"
-              type="number"
-              min="1"
-              placeholder="Enter your age"
-              value={formData.age}
+              id="organisationname"
+              name="organisationname"
+              placeholder="Enter your organisation name"
+              value={formData.organisationname}
               onChange={handleInputChange}
               required
               className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="gender">Gender</Label>
-            <Select onValueChange={handleGenderChange} value={formData.gender}>
-              <SelectTrigger id="gender" className="w-full border-gray-200 focus:ring-event-yellow">
-                <SelectValue placeholder="Select your gender" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
           <div className="space-y-2">
@@ -110,57 +117,87 @@ const RegistrationForm = ({ onSubmit }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="eventcode">Event Code</Label>
+            <Label htmlFor="experience">Years of Experience in Event Management</Label>
             <Input
-              id="eventcode"
-              name="eventcode"
-              placeholder="e.g. CF03EG"
-              value={formData.eventcode}
+              id="experience"
+              name="experience"
+              type="number"
+              min="1"
+              placeholder="e.g. 5"
+              value={formData.experience}
               onChange={handleInputChange}
               required
               className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
-            <Input
-              id="location"
-              name="location"
-              placeholder="City, State"
-              value={formData.location}
-              onChange={handleInputChange}
-              required
-              className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
-            />
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="source">How did you hear about us?</Label>
+          <div>
+  <p className="block text-sm font-medium text-gray-700 mb-3">
+    Types of Events You Organize
+  </p>
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+    {eventTypeOptions.map((type) => (
+      <div
+        key={type}
+        className={`
+          cursor-pointer rounded-md px-3 py-2 text-sm border transition-all
+          ${
+            formData.eventTypes.includes(type)
+              ? 'border-orange-500 bg-orange-50 text-orange-700'
+              : 'border-gray-200 hover:border-orange-300'
+          }
+        `}
+        onClick={() => handleEventTypeSelection(type)}
+      >
+        {type}
+      </div>
+    ))}
+  </div>
+</div>
+
+
+            <div className="space-y-2">
+              <label htmlFor="biography" className="block text-sm font-medium text-gray-700 mb-1">
+                Brief Biography/Description
+              </label>
+              <Textarea
+                id="biography"
+                name="biography"
+                placeholder="Tell us about yourself, your experience, and your organizing style..."
+                value={formData.biography}
+                onChange={handleChange}
+                className="w-full h-32"
+              />
+            </div>
+
+            <div className="space-y-2">
+            <Label htmlFor="eventname">Event Name</Label>
             <Input
-              id="source"
-              name="source"
-              placeholder="e.g. Instagram, friend, website..."
-              value={formData.source}
+              id="eventname"
+              name="eventname"
+              placeholder="Enter your event name"
+              value={formData.eventname}
               onChange={handleInputChange}
               required
               className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
             />
-          </div>
+          </div>           
 
           <Button
             type="submit"
             className="w-full bg-event-yellow hover:bg-yellow-500 text-black"
             disabled={
               !formData.name ||
-              !formData.age ||
-              !formData.gender ||
+              !formData.organisationname ||
               !formData.phonenumber ||
-              !formData.location ||
-              !formData.source
+              !formData.experience ||
+              !formData.biography ||
+              !formData.eventname
             }
+
           >
-            Register Now
+            Create Event
           </Button>
         </form>
       </CardContent>

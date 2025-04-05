@@ -62,7 +62,7 @@ const FeatureCard = ({ feature, index }) => {
 
 const FeaturesSection = () => {
   return (
-    <section id="features" className="py-16 md:py-20 px-6 md:px-8 lg:px-12 bg-gradient-to-b from-white to-yellow-50">
+    <section id="features" className="py-16 md:py-20 px-6 md:px-8 lg:px-12 bg-gradient-to-b from-white to-orange-50">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <motion.h2 
