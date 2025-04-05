@@ -1,55 +1,3 @@
-'use client';
-// import React, { useState } from 'react';
-// import { useRouter } from 'next/navigation';
-// import { useSelector, useDispatch } from 'react-redux';
-// import { submitOnboarding } from '../submitOnboarding';
-
-// function AttendeeOnboardingMain() {
-//   const user = useSelector((state) => state.user);
-//   const dispatch = useDispatch();
-//   const router = useRouter();
-//   const [eventId, setEventId] = useState('');
-//   const [name, setName] = useState('');
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     if (!eventId.trim()) return alert('Event ID is required!');
-//     submitOnboarding(
-//       { role: 'attendee', eventId, name },
-//       user,
-//       router,
-//       dispatch
-//     );
-//   };
-
-//   return (
-//     <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-6">
-//       <h2 className="text-xl font-bold">Attendee Onboarding</h2>
-//       <form onSubmit={handleSubmit} className="space-y-4">
-//         <input
-//           type="text"
-//           placeholder="Your Name"
-//           value={name}
-//           className="border p-2 w-full rounded"
-//           onChange={(e) => setName(e.target.value)}
-//         />
-//         <input
-//           type="text"
-//           placeholder="Enter Event ID"
-//           value={eventId}
-//           className="border p-2 w-full rounded"
-//           onChange={(e) => setEventId(e.target.value)}
-//           required
-//         />
-//         <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-//           Join Event
-//         </button>
-//       </form>
-//     </div>
-//   );
-// }
-
-// export default AttendeeOnboardingMain;
 
 'use client';
 
@@ -64,13 +12,30 @@ const Index = () => {
   const [userData, setUserData] = useState(null);
   const router = useRouter(); // Initialize router
 
-  const handleRegistrationSubmit = (data) => {
-    setUserData(data);
-    setStep("feedback");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    // Redirect to the attendee page
-    router.push("/attendee");
+  const handleRegistrationSubmit = async (data) => {
+    if (!user) return alert("You must be logged in");
+  
+    const eventId = data.eventcode; // 🔥 This is the event code they entered
+  
+    try {
+      // 🔍 Check if the event with that code exists
+      const eventRef = doc(db, "events", eventId);
+      const eventSnap = await getDoc(eventRef);
+  
+      if (!eventSnap.exists()) {
+        alert("Invalid event code! Please check and try again."); // 🧁 Replace this with toast if you want
+        return;
+      }
+  
+      // ✅ Event exists, proceed with onboarding
+      await saveAttendeeOnboarding(user.uid, data);
+      setUserData(data);
+      setStep("feedback");
+      router.push("/attendee");
+    } catch (error) {
+      console.error("Error verifying event code or saving data:", error);
+      alert("Something went wrong, please try again.");
+    }
   };
 
   const handleFeedbackSubmit = (data) => {

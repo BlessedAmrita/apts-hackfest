@@ -21,7 +21,7 @@ export const submitOnboarding = async (formData, user, router, dispatch) => {
 
     await setDoc(userRef, updatedUser, { merge: true });
     dispatch(setUser(updatedUser));
-    router.push(`/dashboard/${formData.role}`);
+    router.push(`/${formData.role}`);
   } catch (error) {
     console.error('Error saving user:', error);
   }

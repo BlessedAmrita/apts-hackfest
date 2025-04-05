@@ -109,7 +109,7 @@ const AttendeeDashboardMain = () => {
               completed={item.completed}
               onClick={
                 item.id === 'community-forum'
-                  ? () => router.push(`/attendee/communityForum/${eventId}`)
+                  ? () => router.push(`/attendee/events/${eventId}/communityForum`)
                   : undefined
               }
             />
