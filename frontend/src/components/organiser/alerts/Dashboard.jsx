@@ -1,163 +1,249 @@
-import React, { useState } from "react";
-import { MOCK_ISSUES } from "@/content/alert/mockData";
-import { Issue, SeverityLevel } from "@/content/alert/types";
-import IssueCard from "./IssueCard";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { Search, Filter } from "lucide-react";
-import NotificationsList from "./NotificationsList";
+"use client";
 
-const Dashboard = () => {
-  const [issues, setIssues] = useState([...MOCK_ISSUES]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterSeverity, setFilterSeverity] = useState("all");
-  const [filterStatus, setFilterStatus] = useState("all");
-  const { toast } = useToast();
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { getFirestore, collection, collectionGroup, getDocs } from "firebase/firestore";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
-  const allNotifications = issues.flatMap(issue => issue.notificationsSent);
-  const pendingIssuesCount = issues.filter(issue => issue.status === "pending").length;
+const OrganizerDashboard = () => {
+  const [eventList, setEventList] = useState([]);
+  const [selectedEventId, setSelectedEventId] = useState("");
+  const [severityData, setSeverityData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [overallMood, setOverallMood] = useState("");
 
-  const handleResolveIssue = (issueId) => {
-    setIssues(prevIssues =>
-      prevIssues.map(issue =>
-        issue.id === issueId ? { ...issue, status: "resolved" } : issue
-      )
-    );
-    toast({
-      title: "Issue resolved",
-      description: "The issue has been marked as resolved.",
-    });
-  };
+  const user = useSelector((state) => state.user);
+  const db = getFirestore();
 
-  const handleEscalateIssue = (issueId) => {
-    toast({
-      title: "Issue escalated",
-      description: "The issue has been escalated to the management team.",
-      variant: "destructive",
-    });
-  };
+  // Fetch Event List on Mount
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const db = getFirestore();
+      try {
+        const snapshot = await getDocs(collectionGroup(db, "metadata"));
+        const infoDocs = snapshot.docs.filter((doc) => doc.id === "info");
 
-  const handleViewDetails = (issueId) => {
-    toast({
-      title: "View details",
-      description: "Viewing issue details (to be implemented).",
-    });
-  };
+        const events = infoDocs.map((doc) => {
+          const pathSegments = doc.ref.path.split("/");
+          const eventId = pathSegments[1];
+          const data = doc.data();
+          return {
+            id: eventId,
+            name: data.name || eventId,
+          };
+        });
 
-  const filteredIssues = issues.filter(issue => {
-    const matchesSearch = searchTerm === "" ||
-      issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      issue.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      issue.location.toLowerCase().includes(searchTerm.toLowerCase());
+        setEventList(events);
+      } catch (err) {
+        console.error("[fetchEvents] Error fetching events:", err);
+      }
+    };
 
-    const matchesSeverity = filterSeverity === "all" || issue.severity === filterSeverity;
-    const matchesStatus = filterStatus === "all" || issue.status === filterStatus;
+    fetchEvents();
+  }, []);
 
-    return matchesSearch && matchesSeverity && matchesStatus;
-  });
+  // Fetch and Chain Analyze → Classify APIs
+  useEffect(() => {
+    const fetchSeverityData = async () => {
+      if (!selectedEventId) {
+        console.log("No event selected. Skipping severity fetch.");
+        return;
+      }
+
+      setLoading(true);
+      console.log("Event selected:", selectedEventId);
+      console.log("Step 1: Calling batch-analyze API for event:", selectedEventId);
+
+      try {
+        // Step 1: Get all posts for selected event
+        const postsRef = collection(db, `events/${selectedEventId}/posts`);
+        const snapshot = await getDocs(postsRef);
+
+        const texts = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.text) {
+            texts.push(data.text);
+          }
+        });
+
+        console.log("Texts extracted:", texts);
+
+        if (texts.length === 0) {
+          console.warn("No feedback text found for event.");
+          setSeverityData([]);
+          return;
+        }
+
+        // Step 2: Send texts to batch-analyze API
+        const batchResponse = await axios.post("https://pjxcharya-batch-analyse.hf.space/analyze-batch", {
+          texts,
+        });
+
+        console.log("Batch analyze response:", batchResponse.data);
+
+        const fullData = {
+          issues: batchResponse.data?.issues || {},
+          positive_emotions: batchResponse.data?.positive_emotions || {},
+          negative_emotions: batchResponse.data?.negative_emotions || {},
+          emotion_summary: batchResponse.data?.emotion_summary || {},
+        };
+
+        const severityResponse = await axios.post("https://pjxcharya-severity-classifier.hf.space/classify-severity", fullData);
+        console.log("Severity classification response:", severityResponse.data);
+
+        // if (severityResponse.data?.classified_issues) {
+        //   const parsedIssues = Object.entries(severityResponse.data.classified_issues).map(
+        //     ([issue, data]) => ({
+        //       issue,
+        //       severity: data.final_severity,
+        //       combined_score: data.combined_score,
+        //       original_count: data.original_count,
+        //       original_severity: data.original_severity,
+        //       original_impact_score: data.original_impact_score,
+        //     })
+        //   );
+
+        //   setSeverityData(parsedIssues);
+        //   setOverallMood(severityResponse.data.overall_mood || "");
+        // } else {
+        //   console.warn("No results found in severity response.");
+        //   setSeverityData([]);
+        //   setOverallMood("");
+        // }
+
+        if (severityResponse.data?.classified_issues) {
+          const parsedIssues = Object.entries(severityResponse.data.classified_issues).map(
+            ([issue, data]) => ({
+              issue,
+              severity: data.final_severity,
+              combined_score: data.combined_score,
+              original_count: data.original_count,
+              original_severity: data.original_severity,
+              original_impact_score: data.original_impact_score,
+            })
+          );
+        
+          // Sort by combined_score descending
+          parsedIssues.sort((a, b) => b.combined_score - a.combined_score);
+        
+          setSeverityData(parsedIssues);
+          setOverallMood(severityResponse.data.overall_mood || "");
+        } else {
+          console.warn("No results found in severity response.");
+          setSeverityData([]);
+          setOverallMood("");
+        }
+        
+
+      } catch (err) {
+        console.error("[fetchSeverityData] Error in chained API flow:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSeverityData();
+  }, [selectedEventId]);
 
   return (
-    <div className="container mx-auto p-4 max-w-5xl">
-      <Tabs defaultValue="issues" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="issues">Issues</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="issues">
-          <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row gap-3 items-end">
-              <div className="relative flex-1">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                <Input
-                  type="search"
-                  placeholder="Search issues"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9"
-                />
-              </div>
-              <div className="flex gap-3 w-full sm:w-auto">
-                <Select value={filterSeverity} onValueChange={setFilterSeverity}>
-                  <SelectTrigger className="w-full sm:w-[130px]">
-                    <div className="flex items-center">
-                      <Filter className="mr-2 h-4 w-4" />
-                      <span>{filterSeverity === "all" ? "Severity" : filterSeverity}</span>
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All severities</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="critical">Critical</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select value={filterStatus} onValueChange={setFilterStatus}>
-                  <SelectTrigger className="w-full sm:w-[130px]">
-                    <div className="flex items-center">
-                      <Filter className="mr-2 h-4 w-4" />
-                      <span>{filterStatus === "all" ? "Status" : filterStatus}</span>
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All statuses</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="in-progress">In Progress</SelectItem>
-                    <SelectItem value="resolved">Resolved</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid gap-4">
-              {filteredIssues.length > 0 ? (
-                filteredIssues.map((issue) => (
-                  <IssueCard
-                    key={issue.id}
-                    issue={issue}
-                    onResolve={handleResolveIssue}
-                    onEscalate={handleEscalateIssue}
-                    onViewDetails={handleViewDetails}
-                  />
-                ))
-              ) : (
-                <div className="text-center py-8 bg-gray-50 rounded-lg">
-                  <p className="text-gray-500">No issues found matching your filters</p>
-                  <Button
-                    variant="outline"
-                    className="mt-2"
-                    onClick={() => {
-                      setSearchTerm("");
-                      setFilterSeverity("all");
-                      setFilterStatus("all");
-                    }}
-                  >
-                    Clear filters
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="notifications">
-          <div className="bg-gray-50 rounded-lg p-4 mb-4">
-            <h3 className="text-lg font-medium mb-2">Notification Logs</h3>
-            <p className="text-sm text-gray-500">
-              Review all SMS and push notifications sent for event issues
-            </p>
+    <div className="p-6 space-y-6">
+      <Card className="shadow-md border border-yellow-300">
+        <CardHeader className="bg-event-light-yellow rounded-t-md">
+          <CardTitle className="text-xl">Organizer Dashboard</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="eventId">Select Event</Label>
+            <Select
+              onValueChange={(val) => setSelectedEventId(val)}
+              value={selectedEventId}
+            >
+              <SelectTrigger id="eventId">
+                <SelectValue placeholder="Choose your event" />
+              </SelectTrigger>
+              <SelectContent>
+                {eventList.map((event) => (
+                  <SelectItem key={event.id} value={event.id}>
+                    {event.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          <NotificationsList notifications={allNotifications} />
-        </TabsContent>
-      </Tabs>
+          {loading && <p className="text-gray-500">Fetching data...</p>}
+
+          {!loading && selectedEventId && severityData.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold">Severity Insights</h2>
+
+              <div className="mb-4 p-4 bg-blue-50 rounded-md border border-blue-300">
+                <p className="text-sm text-gray-700">
+                  <strong>Overall Event Mood:</strong>{" "}
+                  <span className="capitalize font-medium text-blue-700">{overallMood}</span>
+                </p>
+              </div>
+
+              {severityData.map((item, index) => (
+                <Card
+                  key={index}
+                  className="p-4 border-l-4 shadow"
+                  style={{
+                    borderColor:
+                      item.severity === "high"
+                        ? "#DC2626"
+                        : item.severity === "medium"
+                          ? "#FACC15"
+                          : "#10B981",
+                  }}
+                >
+                  <p>
+                    <strong>Issue:</strong> {item.issue.replace(/_/g, " ")}
+                  </p>
+                  <p>
+                    <strong>Severity:</strong>{" "}
+                    <span className="capitalize">{item.severity}</span>
+                  </p>
+                  <p>
+                    <strong>Combined Score:</strong> {item.combined_score}
+                  </p>
+                  <p>
+                    <strong>Mentions:</strong> {item.original_count}
+                  </p>
+                  <p>
+                    <strong>Original Severity:</strong> {item.original_severity}
+                  </p>
+                  <p>
+                    <strong>Impact Score:</strong> {item.original_impact_score}
+                  </p>
+                </Card>
+              ))}
+            </div>
+          )}
+
+
+          {!loading && selectedEventId && severityData.length === 0 && (
+            <p className="text-gray-500">No severity data found.</p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
-export default Dashboard;
+export default OrganizerDashboard;

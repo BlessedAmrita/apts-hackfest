@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +16,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  getFirestore,
+  collectionGroup,
+  getDocs
+} from "firebase/firestore";
 
 const RegistrationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -29,6 +34,35 @@ const RegistrationForm = ({ onSubmit }) => {
     role: "attendee",
   });
 
+  const [eventList, setEventList] = useState([]);
+
+  // Fetch event IDs and names from Firestore
+  useEffect(() => {
+    const fetchEventList = async () => {
+      const db = getFirestore();
+      try {
+        const snapshot = await getDocs(collectionGroup(db, "metadata"));
+        const infoDocs = snapshot.docs.filter(doc => doc.id === "info");
+
+        const events = infoDocs.map((doc) => {
+          const pathSegments = doc.ref.path.split("/");
+          const eventId = pathSegments[1];
+          const data = doc.data();
+          return {
+            id: eventId,
+            name: data.name || eventId, // fallback if name is missing
+          };
+        });
+
+        setEventList(events);
+      } catch (err) {
+        console.error("[fetchEventList] Error:", err);
+      }
+    };
+
+    fetchEventList();
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -36,6 +70,10 @@ const RegistrationForm = ({ onSubmit }) => {
 
   const handleGenderChange = (value) => {
     setFormData((prev) => ({ ...prev, gender: value }));
+  };
+
+  const handleEventChange = (value) => {
+    setFormData((prev) => ({ ...prev, eventId: value }));
   };
 
   const handleSubmit = (e) => {
@@ -55,6 +93,7 @@ const RegistrationForm = ({ onSubmit }) => {
       </CardHeader>
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name */}
           <div className="space-y-2">
             <Label htmlFor="name">Your Name</Label>
             <Input
@@ -64,10 +103,10 @@ const RegistrationForm = ({ onSubmit }) => {
               value={formData.name}
               onChange={handleInputChange}
               required
-              className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
             />
           </div>
 
+          {/* Age */}
           <div className="space-y-2">
             <Label htmlFor="age">Age</Label>
             <Input
@@ -79,14 +118,14 @@ const RegistrationForm = ({ onSubmit }) => {
               value={formData.age}
               onChange={handleInputChange}
               required
-              className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
             />
           </div>
 
+          {/* Gender */}
           <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
             <Select onValueChange={handleGenderChange} value={formData.gender}>
-              <SelectTrigger id="gender" className="w-full border-gray-200 focus:ring-event-yellow">
+              <SelectTrigger id="gender">
                 <SelectValue placeholder="Select your gender" />
               </SelectTrigger>
               <SelectContent>
@@ -97,35 +136,38 @@ const RegistrationForm = ({ onSubmit }) => {
             </Select>
           </div>
 
+          {/* Phone */}
           <div className="space-y-2">
             <Label htmlFor="phonenumber">Phone Number</Label>
-
             <Input
               id="phonenumber"
               name="phonenumber"
               type="number"
-              min="10"
               placeholder="Your contact number"
               value={formData.phonenumber}
               onChange={handleInputChange}
               required
-              className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
             />
           </div>
 
+          {/* 🎯 Event Dropdown */}
           <div className="space-y-2">
-            <Label htmlFor="eventId">Event Code</Label>
-            <Input
-              id="eventId"
-              name="eventId"
-              placeholder="e.g. CF03EG"
-              value={formData.eventId}
-              onChange={handleInputChange}
-              required
-              className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
-            />
+            <Label htmlFor="eventId">Select Event</Label>
+            <Select onValueChange={handleEventChange} value={formData.eventId}>
+              <SelectTrigger id="eventId">
+                <SelectValue placeholder="Choose an event to join" />
+              </SelectTrigger>
+              <SelectContent>
+                {eventList.map((event) => (
+                  <SelectItem key={event.id} value={event.id}>
+                    {event.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
+          {/* Location */}
           <div className="space-y-2">
             <Label htmlFor="location">Location</Label>
             <Input
@@ -135,10 +177,10 @@ const RegistrationForm = ({ onSubmit }) => {
               value={formData.location}
               onChange={handleInputChange}
               required
-              className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
             />
           </div>
 
+          {/* Source */}
           <div className="space-y-2">
             <Label htmlFor="source">How did you hear about us?</Label>
             <Input
@@ -148,10 +190,10 @@ const RegistrationForm = ({ onSubmit }) => {
               value={formData.source}
               onChange={handleInputChange}
               required
-              className="border-gray-200 focus:border-event-yellow focus:ring-event-yellow"
             />
           </div>
 
+          {/* Submit */}
           <Button
             type="submit"
             className="w-full bg-orange-200 hover:bg-orange-300 text-black"
@@ -161,7 +203,8 @@ const RegistrationForm = ({ onSubmit }) => {
               !formData.gender ||
               !formData.phonenumber ||
               !formData.location ||
-              !formData.source
+              !formData.source ||
+              !formData.eventId
             }
           >
             Register Now

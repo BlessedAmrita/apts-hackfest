@@ -20,33 +20,60 @@ const Dashboard = () => {
   const [eventCount, setEventCount] = useState(0);
 
   useEffect(() => {
+    // const fetchEventIds = async () => {
+    //   const db = getFirestore();
+    //   try {
+    //     // const snapshot = await getDocs(collection(db, "events"));
+    //     // const ids = snapshot.docs.map((doc) => doc.id);
+    //     const snapshot = await getDocs(collectionGroup(db, "metadata"));
+    //     const ids = snapshot.docs
+    //       .filter(doc => doc.id === "info")
+    //       .map(doc => {
+    //         const pathSegments = doc.ref.path.split("/"); // events/{eventId}/metadata/info
+    //         return pathSegments[1];
+    //       });
+
+    //     console.log("[fetchEventIds] Extracted event IDs from metadata/info:", ids);
+
+    //     console.log("[fetchEventIds] Retrieved event IDs:", ids);
+
+    //     setEventIds(ids);
+    //     if (ids.length > 0) {
+    //       setSelectedEventId(ids[0]);
+    //       console.log("[fetchEventIds] Auto-selected first event:", ids[0]);
+    //     }
+    //   } catch (err) {
+    //     console.error("[fetchEventIds] Error fetching events:", err);
+    //   }
+    // };
     const fetchEventIds = async () => {
       const db = getFirestore();
       try {
-        // const snapshot = await getDocs(collection(db, "events"));
-        // const ids = snapshot.docs.map((doc) => doc.id);
         const snapshot = await getDocs(collectionGroup(db, "metadata"));
-        const ids = snapshot.docs
-          .filter(doc => doc.id === "info")
-          .map(doc => {
-            const pathSegments = doc.ref.path.split("/"); // events/{eventId}/metadata/info
-            return pathSegments[1];
-          });
-
-        console.log("[fetchEventIds] Extracted event IDs from metadata/info:", ids);
-
-        console.log("[fetchEventIds] Retrieved event IDs:", ids);
-
-        setEventIds(ids);
-        if (ids.length > 0) {
-          setSelectedEventId(ids[0]);
-          console.log("[fetchEventIds] Auto-selected first event:", ids[0]);
+        const infoDocs = snapshot.docs.filter((doc) => doc.id === "info");
+    
+        const idsWithNames = infoDocs.map((doc) => {
+          const pathSegments = doc.ref.path.split("/"); // events/{eventId}/metadata/info
+          const eventId = pathSegments[1];
+          const data = doc.data();
+          return {
+            id: eventId,
+            name: data.name || eventId, // fallback to eventId if name is missing
+          };
+        });
+    
+        console.log("[fetchEventIds] Event list:", idsWithNames);
+    
+        setEventIds(idsWithNames);
+        if (idsWithNames.length > 0) {
+          setSelectedEventId(idsWithNames[0].id);
+          console.log("[fetchEventIds] Auto-selected first event:", idsWithNames[0].id);
         }
       } catch (err) {
         console.error("[fetchEventIds] Error fetching events:", err);
       }
     };
-
+    
     const countValidEvents = async () => {
       const db = getFirestore();
       try {
@@ -113,7 +140,7 @@ const Dashboard = () => {
               <label htmlFor="event-select" className="block mb-1 font-medium">
                 Select Event
               </label>
-              <select
+              {/* <select
                 id="event-select"
                 className="w-full p-2 border rounded-md"
                 value={selectedEventId || ""}
@@ -127,7 +154,23 @@ const Dashboard = () => {
                     {id}
                   </option>
                 ))}
-              </select>
+              </select> */}
+              <select
+  id="event-select"
+  className="w-full p-2 border rounded-md"
+  value={selectedEventId || ""}
+  onChange={(e) => {
+    console.log("[Dropdown] Event selected:", e.target.value);
+    setSelectedEventId(e.target.value);
+  }}
+>
+  {eventIds.map((event) => (
+    <option key={event.id} value={event.id}>
+      {event.name}
+    </option>
+  ))}
+</select>
+
             </div>
 
             {/* Middle Section */}
