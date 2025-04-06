@@ -2,7 +2,7 @@ import { CalendarCheck } from "lucide-react";
 
 const EventBanner = () => {
   return (
-    <div className="relative w-full overflow-hidden bg-gradient-to-r from-event-light-yellow to-event-yellow py-16 md:py-24">
+    <div className="relative w-full overflow-hidden bg-gradient-to-r from-orange-50 to-orange-100 py-16 md:py-24">
       <div className="container relative z-10">
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">

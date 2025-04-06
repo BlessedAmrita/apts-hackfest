@@ -58,18 +58,18 @@ const getStatusColor = (status) => {
 
 const EventsList = () => {
   return (
-    <Card>
+    <Card className="bg-orange-scard/30">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
-          <CardTitle className="text-lg font-medium">Your Events</CardTitle>
+          <CardTitle className="text-lg font-semibold">Your Events</CardTitle>
           <CardDescription>Manage your upcoming and past events</CardDescription>
         </div>
-        <Button variant="outline" size="sm">View All</Button>
+        <Button variant="outline" size="sm" className="bg-white text-orange-button hover:bg-orange-button hover:text-white">View All</Button>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {events.map((event) => (
-            <div key={event.id} className="event-card relative p-3 border rounded-xl shadow-sm">
+            <div key={event.id} className="event-card relative p-3 border rounded-xl bg-gray-100 shadow-sm">
               <div 
                 className="h-32 mb-3 bg-center bg-cover rounded-lg" 
                 style={{ backgroundImage: `url(${event.image})` }}

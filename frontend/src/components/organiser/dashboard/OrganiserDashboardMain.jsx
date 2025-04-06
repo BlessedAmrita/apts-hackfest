@@ -113,9 +113,9 @@ const Dashboard = () => {
 
     fetchSentiment();
   }, [selectedEventId]);
-
+ 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-orange-bg1">
       <Sidebar />
       <div className="flex-1 ml-64">
         <main className="p-6">
@@ -123,8 +123,8 @@ const Dashboard = () => {
             {/* Header */}
             <div className="flex justify-between items-center ">
               <div>
-                <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-                <p className="text-muted-foreground">
+                <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+                <p className="text-muted-foreground text-lg">
                   Welcome back! Here's what's happening with your events.
                 </p>
               </div>

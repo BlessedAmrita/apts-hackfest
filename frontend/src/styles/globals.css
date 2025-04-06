@@ -40,6 +40,18 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+  /* Pastel colors for analytics dashboard */
+  --pastel-mint: 151 55% 88%;
+  --pastel-lavender: 261 51% 87%;
+  --pastel-peach: 25 100% 89%;
+  --pastel-blue: 199 75% 86%;
+  --pastel-pink: 340 82% 90%;
+  --pastel-yellow: 48 100% 88%;
+  
+  /* Sentiment colors */
+  --sentiment-positive: 151 55% 60%;
+  --sentiment-neutral: 221 39% 70%;
+  --sentiment-negative: 350 70% 65%;
 }
 
 /* Dark Mode Support */
@@ -356,5 +368,60 @@
 
   .dashboard-card {
     @apply rounded-xl border p-5 bg-white shadow-sm hover:shadow-md transition-all;
+  }
+
+  .pastel-card {
+    @apply rounded-xl shadow-md transition-all duration-300 hover:shadow-lg;
+  }
+  
+  .pastel-mint {
+    @apply bg-[hsl(var(--pastel-mint))];
+  }
+  
+  .pastel-lavender {
+    @apply bg-[hsl(var(--pastel-lavender))];
+  }
+  
+  .pastel-peach {
+    @apply bg-[hsl(var(--pastel-peach))];
+  }
+  
+  .pastel-blue {
+    @apply bg-[hsl(var(--pastel-blue))];
+  }
+  
+  .pastel-pink {
+    @apply bg-[hsl(var(--pastel-pink))];
+  }
+  
+  .pastel-yellow {
+    @apply bg-[hsl(var(--pastel-yellow))];
+  }
+  .orange-pcard{
+    @apply bg-[hsl(var(--orange-pcard))];
+  }
+
+  .sentiment-positive {
+    @apply text-[hsl(var(--sentiment-positive))];
+  }
+  
+  .sentiment-neutral {
+    @apply text-[hsl(var(--sentiment-neutral))];
+  }
+  
+  .sentiment-negative {
+    @apply text-[hsl(var(--sentiment-negative))];
+  }
+  
+  .stats-card {
+    @apply p-6 rounded-xl shadow-md;
+  }
+
+  .dashboard-grid {
+    @apply grid gap-6;
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
   }
 }

@@ -20,16 +20,16 @@ const DashboardHeader = () => {
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center">
-          <Button variant="outline" size="sm" className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="flex items-center gap-2 bg-orange-100 text-white hover:bg-white hover:text-orange-100">
             <Calendar className="h-4 w-4" />
             <span>Last 30 days</span>
           </Button>
         </div>
         <Select defaultValue="all">
-          <SelectTrigger className="w-[160px] h-9">
+          <SelectTrigger className="w-[160px] h-9 bg-orange-100 text-white">
             <SelectValue placeholder="Event Type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             <SelectItem value="all">All Events</SelectItem>
             <SelectItem value="exhibition">Exhibitions</SelectItem>
             <SelectItem value="concert">Concerts</SelectItem>
@@ -37,7 +37,7 @@ const DashboardHeader = () => {
             <SelectItem value="meetup">Meetups</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="default" size="sm" className="flex items-center gap-2">
+        <Button variant="default" size="sm" className="flex items-center gap-2 bg-orange-button text-white hover:bg-white hover:text-orange-button">
           <Download className="h-4 w-4" />
           <span>Export Data</span>
         </Button>

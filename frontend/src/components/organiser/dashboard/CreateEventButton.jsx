@@ -97,7 +97,7 @@ const CreateEventButton = () => {
     <Dialog open={open} onOpenChange={setOpen}>
 
       <DialogTrigger asChild>
-        <Button className="gap-2">
+        <Button className="gap-2 border-white border-[0.5px] bg-orange-button text-white font-bold hover:bg-white hover:text-orange-button hover:border-orange-br2">
           <PlusCircle size={18} />
           Create New Event
         </Button>
@@ -106,7 +106,7 @@ const CreateEventButton = () => {
       <DialogContent className="sm:max-w-[500px] bg-white border border-yellow-400 shadow-md rounded-xl">
 
         <DialogHeader>
-          <DialogTitle>Create New Event</DialogTitle>
+          <DialogTitle >Create New Event</DialogTitle>
           <DialogDescription>
             Fill in the details to create a new event. Click save when you're done.
           </DialogDescription>

@@ -45,12 +45,12 @@ const KeywordCloud = () => {
   const sortedKeywords = [...keywords].sort((a, b) => b.value - a.value);
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-orange-scard/20">
       <CardHeader>
         <CardTitle>Keyword Cloud</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="flex flex-wrap gap-3 justify-center items-center">
           {sortedKeywords.map((keyword, index) => (
             <span
               key={index}

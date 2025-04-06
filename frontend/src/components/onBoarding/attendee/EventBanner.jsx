@@ -24,7 +24,7 @@ const EventBanner = () => {
       <div className="absolute right-10 top-10 h-20 w-20 rounded-full bg-white/20 animate-pulse-light"></div>
       <div className="absolute left-1/4 bottom-10 h-16 w-16 rounded-full bg-white/10 animate-pulse-light"></div>
     </div>
-  );
+  ); 
 };
 
 export default EventBanner;

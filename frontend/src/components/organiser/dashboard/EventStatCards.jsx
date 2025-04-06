@@ -3,13 +3,13 @@ import { UsersRound, Calendar, TrendingUp, Star } from "lucide-react";
 
 const StatCard = ({ title, value, icon, color }) => {
   return (
-    <div className={`stat-card bg-${color} bg-opacity-20`}>
+    <div className={`stat-card bg-[hsl(var(--pastel-${color}))] `}>
       <div className="flex justify-between items-start">
         <div>
           <p className="text-sm font-medium text-muted-foreground">{title}</p>
           <h3 className="text-2xl font-bold mt-1">{value}</h3>
         </div>
-        <div className={`p-2 rounded-lg bg-${color} bg-opacity-30`}>
+        <div className={`p-2 rounded-lg bg-[hsl(var(--pastel-${color}))] bg-opacity-30`}>
           {icon}
         </div>
       </div>
@@ -24,25 +24,25 @@ const EventStatCards = () => {
         title="Total Events"
         value="24"
         icon={<Calendar className="text-blue-500" size={20} />}
-        color="pastel-blue"
-      />
+        color="blue"
+      /> 
       <StatCard
         title="Total Attendees"
         value="4,129"
         icon={<UsersRound className="text-purple-500" size={20} />}
-        color="pastel-purple"
+        color="purple"
       />
       <StatCard
         title="Satisfaction Rate"
         value="92%"
         icon={<Star className="text-yellow-500" size={20} />}
-        color="pastel-yellow"
+        color="yellow"
       />
       <StatCard
         title="Growth Rate"
         value="+12.3%"
         icon={<TrendingUp className="text-green-500" size={20} />}
-        color="pastel-green"
+        color="green"
       />
     </div>
   );
