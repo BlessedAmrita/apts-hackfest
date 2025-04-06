@@ -16,12 +16,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { MessageSquare, Send, Users } from "lucide-react";
+import RaiseAnIssue from "./RaiseAnIssue";
 
 const CommunityForumMain = ({ eventId }) => {
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState("");
   const { user } = useAuth(); // 🔥 Get logged-in user
-  
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+
   console.log("🟢 eventId in CommunityForumMain:", eventId);
 
   // ✅ Firestore Real-Time Listener for Posts
@@ -52,6 +55,7 @@ const CommunityForumMain = ({ eventId }) => {
       uid: user.uid,
       author: user.displayName || "Anonymous",
       text: newPost,
+      fromCommunityForum: true,
       timestamp: serverTimestamp(),
     };
 
@@ -59,14 +63,24 @@ const CommunityForumMain = ({ eventId }) => {
     setNewPost(""); // Reset input field
   };
 
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <main className="flex-grow container py-8">
+        <Button onClick={() => setIsDialogOpen(true)}>Raise an Issue</Button>
+
+        <RaiseAnIssue
+          open={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          eventId={eventId}
+          user={user}
+        />
+
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Community Discussion</h1>
           <div className="flex items-center gap-2 text-gray-600">
-            <Users className="h-5 w-5 text-event-yellow" />
-            <span className="font-medium">{posts.length} Participants</span>
+            {/* <Users className="h-5 w-5 text-event-yellow" />
+            <span className="font-medium">{posts.length} Participants</span> */}
           </div>
         </div>
 
@@ -95,26 +109,37 @@ const CommunityForumMain = ({ eventId }) => {
             </Card>
 
             {/* 🔥 DYNAMIC POSTS */}
-            {posts.map((post) => (
-              <Card key={post.id} className="mb-4 shadow-sm hover:shadow transition-shadow">
-                <CardContent className="p-4">
-                  <div className="flex items-start gap-3">
-                    <Avatar className="h-10 w-10 bg-event-light-yellow text-gray-700">
-                      <AvatarFallback>{post.author?.charAt(0).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex justify-between mb-1">
-                        <h3 className="font-medium">{post.author}</h3>
-                        <span className="text-gray-500 text-sm">
-                          {post.timestamp?.toDate().toLocaleString() || "Just now"}
-                        </span>
+            {posts
+              .filter((post) => post.fromCommunityForum) // ✅ Only include community posts
+              .map((post) => (
+                <Card key={post.id} className="mb-4 shadow-sm hover:shadow transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <Avatar className="h-10 w-10">
+                        {post.imgUrl ? (
+                          <img
+                            src={post.imgUrl}
+                            alt={post.author}
+                            className="rounded-full object-cover"
+                          />
+                        ) : (
+                          <AvatarFallback>{post.author?.charAt(0).toUpperCase()}</AvatarFallback>
+                        )}
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex justify-between mb-1">
+                          <h3 className="font-medium">{post.author}</h3>
+                          <span className="text-gray-500 text-sm">
+                            {post.timestamp?.toDate().toLocaleString() || "Just now"}
+                          </span>
+                        </div>
+                        <p className="text-gray-700">{post.text}</p>
                       </div>
-                      <p className="text-gray-700">{post.text}</p>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+
           </div>
 
           {/* 📜 Forum Guidelines */}
