@@ -17,27 +17,6 @@ const EventHeader = ({
     else if (hour < 18) setGreeting('Good afternoon');
     else setGreeting('Good evening');
   }, []);
-
-  // useEffect(() => {
-  //   const fetchMetadata = async () => {
-  //     if (!additionalData?.eventId) return;
-
-  //     try {
-  //       const docRef = doc(db, 'events', additionalData.eventId, 'metadata', 'info');
-  //       const docSnap = await getDoc(docRef);
-
-  //       if (docSnap.exists()) {
-  //         setMetadata(docSnap.data());
-  //       } else {
-  //         console.log('No metadata info found!');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching metadata:', error);
-  //     }
-  //   };
-
-  //   fetchMetadata();
-  // }, [additionalData?.eventId]);
   useEffect(() => {
     const fetchMetadata = async () => {
       if (!additionalData?.eventId) {
