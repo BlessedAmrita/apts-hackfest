@@ -28,7 +28,7 @@ const data = [
 
 const TimeAnalysis = () => {
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-orange-scard/30">
       <CardHeader>
         <CardTitle>Time-Based Analysis</CardTitle>
       </CardHeader>

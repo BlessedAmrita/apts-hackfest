@@ -24,7 +24,7 @@ const AnalyticsMain = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto bg-orange-bg1">
         <main className="p-6">
           <DashboardHeader />
 
@@ -74,8 +74,8 @@ const AnalyticsMain = () => {
           </div>
 
           {/* Engagement & Time Analysis */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <EngagementMetrics />
+          <div className="grid grid-cols-1 gap-6 mb-6">
+            {/* <EngagementMetrics /> */}
             <TimeAnalysis />
           </div>
 

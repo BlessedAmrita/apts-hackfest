@@ -71,15 +71,18 @@ const config = {
   				ring: 'hsl(var(--sidebar-ring))'
   			},
 			  pastel: {
-				purple: "#E5DEFF",
-				blue: "#D3E4FD",
-				pink: "#FFDEE2",
-				green: "#F2FCE2",
-				yellow: "#FEF7CD",
-				peach: "#FDE1D3",
-				gray: "#F1F0FB",
-				red: '#FFD1D1',
-			},
+				mint: 'hsl(var(--pastel-mint))',
+				lavender: 'hsl(var(--pastel-lavender))',
+				peach: 'hsl(var(--pastel-peach))',
+				blue: 'hsl(var(--pastel-blue))',
+				pink: 'hsl(var(--pastel-pink))',
+				yellow: 'hsl(var(--pastel-yellow))',
+			  },
+			  sentiment: {
+				positive: 'hsl(var(--sentiment-positive))',
+				neutral: 'hsl(var(--sentiment-neutral))',
+				negative: 'hsl(var(--sentiment-negative))',
+			  },
 			orange:{
 				DEFAULT:"#FEC6A1",
 				100:'#ff952c',
@@ -90,6 +93,17 @@ const config = {
 				lightorange:'#ffc561',
 				50:'#ffebc6', 
 				80:'#ffbc47',
+				bg1:'#FFF8ED',
+				bg2:'#FFF3E0',
+				pcard:'#FFCA80',
+				scard:'#FFDAB9',
+				acard:'#FF9A5A',
+				button:'#FF7B29',
+				chart1:'#FFB347',
+				chart2:'#FFCC33',
+				chart3:'#FF7B29',
+				br1:'#FFBF69',
+				br2:'#F97316'
 			},
 
 			severity: {

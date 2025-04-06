@@ -62,9 +62,9 @@ const getAlertStyles = (type) => {
 
 const AlertsList = () => {
   return (
-    <Card>
+    <Card className="bg-orange-scard/40">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-medium">Recent Alerts</CardTitle>
+        <CardTitle className="text-lg font-semibold">Recent Alerts</CardTitle>
         <CardDescription>Issues that need your attention</CardDescription>
       </CardHeader>
       <CardContent>

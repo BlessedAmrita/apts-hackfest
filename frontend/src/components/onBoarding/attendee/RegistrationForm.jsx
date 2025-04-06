@@ -82,8 +82,8 @@ const RegistrationForm = ({ onSubmit }) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg animate-fade-in bg-white border-event-light-yellow">
-      <CardHeader className="bg-event-light-yellow rounded-t-lg">
+    <Card className="w-full max-w-xl mx-auto shadow-lg animate-fade-in bg-white border-event-light-yellow">
+      <CardHeader className="bg-orange-80 rounded-t-lg">
         <CardTitle className="text-center text-2xl font-bold">
           Register for Event
         </CardTitle>
@@ -196,7 +196,7 @@ const RegistrationForm = ({ onSubmit }) => {
           {/* Submit */}
           <Button
             type="submit"
-            className="w-full bg-event-yellow hover:bg-yellow-500 text-black"
+            className="w-full bg-orange-200 hover:bg-orange-300 text-black"
             disabled={
               !formData.name ||
               !formData.age ||

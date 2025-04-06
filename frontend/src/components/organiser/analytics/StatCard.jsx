@@ -7,7 +7,7 @@ const StatCard = ({
   value,
   description,
   icon,
-  colorClass = "pastel-blue",
+  colorClass = "orange-pcard",
   trend,
   className,
 }) => {

@@ -1,4 +1,5 @@
 "use client";
+import OrganiserEventsMain from "@/components/organiser/events/OrganiserEventsMain";
 import { useRouter } from "next/navigation";
 
 const EventsPage = () => {
@@ -12,7 +13,7 @@ const EventsPage = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Upcoming Events</h1>
+      {/* <h1 className="text-2xl font-bold mb-4">Upcoming Events</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {events.map(event => (
           <div
@@ -23,9 +24,10 @@ const EventsPage = () => {
             <h2 className="text-xl font-semibold">{event.name}</h2>
           </div>
         ))}
-      </div>
+      </div> */}
+     <OrganiserEventsMain />
     </div>
   );
 };
 
-export default EventsPage;
+export default EventsPage;  

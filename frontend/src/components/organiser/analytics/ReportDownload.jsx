@@ -60,7 +60,7 @@ const ReportDownload = () => {
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {reports.map((report) => (
-        <Card key={report.id}>
+        <Card key={report.id} className="bg-orange-scard/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               {getIcon(report.type)}
@@ -74,9 +74,9 @@ const ReportDownload = () => {
               variant="outline"
               size="sm"
               onClick={() => handleDownload(report)}
-              className="gap-2"
+              className="gap-2 bg-orange-button text-white hover:bg-white hover:text-orange-button"
             >
-              <Download className="h-4 w-4" />
+              <Download className="h-4 w-4 " />
               Download
             </Button>
           </CardContent>

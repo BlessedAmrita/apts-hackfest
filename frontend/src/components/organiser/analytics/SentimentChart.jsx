@@ -40,7 +40,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 const SentimentChart = () => {
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-orange-scard/20">
       <CardHeader>
         <CardTitle>Sentiment Trends</CardTitle>
       </CardHeader>
@@ -51,15 +51,53 @@ const SentimentChart = () => {
               data={data}
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" />
+              <defs>
+                <linearGradient id="colorPositive" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="hsl(var(--sentiment-positive))" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="hsl(var(--sentiment-positive))" stopOpacity={0}/>
+                </linearGradient>
+                <linearGradient id="colorNeutral" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="hsl(var(--sentiment-neutral))" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="hsl(var(--sentiment-neutral))" stopOpacity={0}/>
+                </linearGradient>
+                <linearGradient id="colorNegative" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="hsl(var(--sentiment-negative))" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="hsl(var(--sentiment-negative))" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
               <XAxis dataKey="date" />
-              <YAxis />
+              <YAxis 
+              tickFormatter={(value) => `${value}%`} 
+              domain={[0, 100]}/>
               <Tooltip content={<CustomTooltip />} />
               <Legend />
-              <Area type="monotone" dataKey="positive" stackId="1" stroke="#4CAF50" fill="#4CAF50" />
-              <Area type="monotone" dataKey="neutral" stackId="1" stroke="#FFC107" fill="#FFC107" />
-              <Area type="monotone" dataKey="negative" stackId="1" stroke="#F44336" fill="#F44336" />
-            </AreaChart>
+              <Area
+                type="monotone"
+                dataKey="positive"
+                stroke="hsl(var(--sentiment-positive))"
+                fillOpacity={1}
+                fill="url(#colorPositive)"
+                name="Positive"
+              />
+              <Area
+                type="monotone"
+                dataKey="neutral"
+                stroke="hsl(var(--sentiment-neutral))"
+                fillOpacity={1}
+                fill="url(#colorNeutral)"
+                name="Neutral"
+              />
+              <Area
+                type="monotone"
+                dataKey="negative"
+                stroke="hsl(var(--sentiment-negative))"
+                fillOpacity={1}
+                fill="url(#colorNegative)"
+                name="Negative"
+              />
+              </AreaChart>
           </ResponsiveContainer>
         </div>
       </CardContent>
