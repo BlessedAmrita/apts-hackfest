@@ -1,0 +1,20 @@
+{
+    "total_feedback": 1200,
+    "sentiment_summary": {
+      "positive": 760,
+      "neutral": 280,
+      "negative": 160
+    },
+    "top_issues": [
+      {"issue": "long queues", "count": 80},
+      {"issue": "audio glitches", "count": 45}
+    ],
+    "top_positive_mentions": [
+      {"feature": "keynote speaker", "count": 140},
+      {"feature": "food quality", "count": 90}
+    ],
+    "emotion_keywords": {
+      "joy": 150,
+      "frustration": 60
+    }
+  }  
